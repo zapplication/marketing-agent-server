@@ -6,10 +6,21 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors({ 
-  origin: process.env.FRONTEND_URL 
-    ? process.env.FRONTEND_URL.split(',')
-    : ["http://localhost:3000", "https://marketing-agent-client-umber.vercel.app"],
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    // Allow these specific origins
+    const allowed = [
+      'http://localhost:3000',
+      'https://marketing-agent-client-umber.vercel.app'
+    ];
+    if (allowed.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: "20mb" }));
