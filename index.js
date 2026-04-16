@@ -6,7 +6,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000" }));
+app.use(cors({ 
+  origin: process.env.FRONTEND_URL 
+    ? process.env.FRONTEND_URL.split(',')
+    : ["http://localhost:3000", "https://marketing-agent-client-umber.vercel.app"],
+  credentials: true
+}));
 app.use(express.json({ limit: "20mb" }));
 
 const PORT = process.env.PORT || 4000;
